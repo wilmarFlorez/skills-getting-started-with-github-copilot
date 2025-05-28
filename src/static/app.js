@@ -15,25 +15,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
-        const activityCard = document.createElement("div");
-        activityCard.className = "activity-card";
+        const activityCard = document.createElement('div')
+        activityCard.className = 'activity-card'
 
-        const spotsLeft = details.max_participants - details.participants.length;
+        const spotsLeft = details.max_participants - details.participants.length
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-        `;
+        `
 
-        activitiesList.appendChild(activityCard);
+        // Participants section
+        const participantsSection = document.createElement('div')
+        participantsSection.className = 'activity-card-participants'
+
+        const participantsTitle = document.createElement('div')
+        participantsTitle.className = 'activity-card-participants-title'
+        participantsTitle.textContent = 'Participants:'
+
+        const participantsList = document.createElement('ul')
+        participantsList.className = 'activity-card-participants-list'
+
+        if (details.participants && details.participants.length > 0) {
+          details.participants.forEach((email) => {
+            const li = document.createElement('li')
+            li.textContent = email
+            participantsList.appendChild(li)
+          })
+        } else {
+          const li = document.createElement('li')
+          li.textContent = 'No participants yet.'
+          participantsList.appendChild(li)
+        }
+
+        participantsSection.appendChild(participantsTitle)
+        participantsSection.appendChild(participantsList)
+
+        activityCard.appendChild(participantsSection)
+
+        activitiesList.appendChild(activityCard)
 
         // Add option to select dropdown
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        activitySelect.appendChild(option);
+        const option = document.createElement('option')
+        option.value = name
+        option.textContent = name
+        activitySelect.appendChild(option)
       });
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
